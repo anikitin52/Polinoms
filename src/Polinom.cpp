@@ -12,7 +12,6 @@
 #include <map>
 #include <cmath>
 
-
 int Polinom::Parse(string str) {
 	status = 1;
 	str.erase(std::remove(str.begin(), str.end(), ' '), str.end());  // probels?
@@ -97,7 +96,9 @@ int Polinom::Parse(string str) {
 		case Stat::Svar3:
 			if (std::isdigit(str[i])) {
 				actual_pair.first += stoi(string(1, str[i])) * 1;
-				monoms.push_back(actual_pair);
+				if (actual_pair.second != 0.0) {
+					monoms.push_back(actual_pair);  // проверяем что коэффициент не нулевой
+				}
 				actual_pair.first = 0;
 				actual_pair.second = 0;
 				condition = Stat::Sadd; break;
@@ -112,6 +113,26 @@ int Polinom::Parse(string str) {
 	}
 	return 0;
 }
+
+
+double Polinom::Calculate(vector<double> values) {
+	if (status = 0) throw 1;
+	double value = 0.0;
+	for (int i = 0; i < monoms.size(); i++) {
+		double monom = monoms[i].second;
+		int tmp = monoms[i].first;
+		int ind = 0;
+		while (tmp > 0) {
+			if (ind >= values.size()) {
+				throw 1;
+			}
+			monom *= pow(values[ind++], tmp % 10);
+			tmp /= 10;
+		}
+	}
+	return value;
+}
+
 
 //int Translator::Parse() {
 //	status = 1;

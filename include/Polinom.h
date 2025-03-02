@@ -13,6 +13,9 @@
 #include <cmath>
 #include <map>
 #include <algorithm>
+#include <string>
+
+
 
 using namespace std;   // лучше так не делать
 
@@ -54,11 +57,81 @@ public:
 			cout << "that's all right!" << endl;
 		}
 	}
-	int GetStatus() { return status; }
-	double Calculate(vector<float> values);
+
+	Polinom(vector<pair<unsigned int, double>> _monoms) {
+		for (int i = 0; i < _monoms.size(); i++) {
+			if (_monoms[i].second != 0) {
+				if (_monoms[i].second >= (unsigned int)1000) { throw 1; }  // нужно ли явное приведение типов?
+				monoms.push_back(_monoms[i]);
+			}
+		}
+		sort(monoms.rbegin(), monoms.rend());
+		status = 1;
+	} // если все double != 0 and -1 < first < 1000
+	int GetStatus() const { return status; }
+	double Calculate(vector<double> values);
 	Polinom operator+(const Polinom &other) {  // зачем &?
-		vector<pair<int, double>> res_vector;
+		if (GetStatus() == 0) {
+			throw 1;
+		}
+		vector<pair<unsigned int, double>> res_vector;
 		// лучше friend функция?
+		int i = 0, j = 0, k = 0;
+		int n1 = monoms.size();
+		int n2 = other.monoms.size();
+		while (i < n1 && j < n2) {
+			if (monoms[i].first > other.monoms[j].first) {
+				res_vector.push_back(monoms[i++]);
+			}
+			if (monoms[i].first < other.monoms[j].first) {
+				res_vector.push_back(other.monoms[j++]);
+			}
+			if (monoms[i].first == other.monoms[j].first) {
+				if ((other.monoms[j].second + monoms[i].second) != 0) {
+					pair<int, double> p = { monoms[i].first, other.monoms[j].second + monoms[i].second };
+					res_vector.push_back(p);
+				}
+				i++; j++;
+			}
+		}
+		while (i < n1) {
+			res_vector.push_back(monoms[i++]);
+		}
+		while (j < n2) {
+			res_vector.push_back(monoms[j++]);
+		}
+		return Polinom(res_vector);
+	}
+
+	Polinom operator*(const double value) {
+		if (GetStatus() == 0) {
+			throw 1;
+		}
+		vector<pair<unsigned int, double>> res_vector;
+		if (value == 0.0) {
+			return Polinom(res_vector);  // на случай если передали ноль
+		}
+		for (int i = 0; i < monoms.size(); i++) {
+			pair<int, double> p = { monoms[i].first, monoms[i].second * value};
+			res_vector.push_back(p);
+		}
+		return Polinom(res_vector);
+	}
+
+	friend ostream& operator<<(ostream& ostr, const Polinom& pol)
+	{
+		if (pol.GetStatus() == 0) {
+			throw 1;
+		}
+		string str = "";
+		for (int i = 0; i < pol.monoms.size(); i++) {
+			if (i > 0) str += '+';
+			str += to_string(pol.monoms[i].second) + "x^" + to_string(pol.monoms[i].first / 100);
+			str += "y^" + to_string(pol.monoms[i].first % 100 / 10);
+			str += "z^" + to_string(pol.monoms[i].first % 10);
+		}
+		ostr << str;
+		return ostr;
 	}
 };
 

@@ -6,6 +6,12 @@ TEST(Initialization, CanCreatePolinomForTheCorrectString)
 	ASSERT_NO_THROW(Polinom p("4x^5y^9z^8+2x^3y^4z^5"));
 }
 
+TEST(Initialization, CanCreatePolinomForTheCorrectStringForNulPolinom)
+{
+	ASSERT_NO_THROW(Polinom p("0x^5y^9z^8+0x^3y^4z^5"));
+}
+
+
 TEST(Initialization, CanCreatePolinomForANonCorrectString)
 {
 	ASSERT_NO_THROW(Polinom p("a+2))+8."));
@@ -22,6 +28,33 @@ TEST(Initialization, can_return_error_code_get_status_for_syntax_a_non_correct_s
 {
 	Polinom p("((a + b)/7 -) 6 * sin(x) + pi");
 	EXPECT_EQ(0, p.GetStatus());
+}
+
+
+TEST(Output, CanCorrectCoutPolinomForTheCorrectString)
+{
+	Polinom p("4x^5y^9z^8+2x^3y^4z^5");
+	ASSERT_NO_THROW(cout << p);
+}
+
+TEST(Output, NotCanCoutPolinomForNotCorrectString)
+{
+	Polinom p("4x^5y^9z^8+2x^3y^4z^5+*");
+	ASSERT_ANY_THROW(cout << p);
+}
+
+TEST(Calculate, CanCalculateForCorrectPolinom)
+{
+	Polinom p("4x^5y^9z^8+2x^3y^4z^5+*");
+	vector<double> values = { 3.5, 5.7, 6.9 };
+	ASSERT_NO_THROW(p.Calculate(values));
+}
+
+TEST(Calculate, CorrectResultCalculateForCorrectPolinom)
+{
+	Polinom p("4x^5y^9z^8+2x^3y^4z^5+*");
+	vector<double> values = { 3.5, 5.7, 6.9 };
+	EXPECT_EQ(p.Calculate(values), 5);
 }
 
 //
