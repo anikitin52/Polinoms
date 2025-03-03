@@ -47,7 +47,7 @@ class Polinom {
 	vector<pair<unsigned int, double>> monoms;
 public:
 	Polinom(string src_str) {
-		int result = Parse(src_str);  // Parse() заполянет поле status в заивисимости от корректности строки
+		int result = Parse(src_str);  // Parse() заполянет поле status в зависимости от корректности строки
 		if ((result < 0) || (result > 0)) {
 			status = 0;
 			cout << "error code : " << result << endl;
@@ -70,8 +70,11 @@ public:
 	} // если все double != 0 and -1 < first < 1000
 	int GetStatus() const { return status; }
 	double Calculate(vector<double> values);
-	Polinom operator+(const Polinom &other) {  // зачем &?
+	Polinom operator+(const Polinom &other) const{  // зачем &?
 		if (GetStatus() == 0) {
+			throw 1;
+		}
+		if (other.GetStatus() == 0) {
 			throw 1;
 		}
 		vector<pair<unsigned int, double>> res_vector;
@@ -103,7 +106,7 @@ public:
 		return Polinom(res_vector);
 	}
 
-	Polinom operator*(const double value) {
+	Polinom operator*(const double value) const {
 		if (GetStatus() == 0) {
 			throw 1;
 		}
@@ -117,6 +120,11 @@ public:
 		}
 		return Polinom(res_vector);
 	}
+
+	Polinom operator-(const Polinom& other) {
+		return *this + (other*(-1));
+	}
+
 
 	friend ostream& operator<<(ostream& ostr, const Polinom& pol)
 	{
@@ -132,6 +140,26 @@ public:
 		}
 		ostr << str;
 		return ostr;
+	}
+
+	bool operator==(const Polinom & other) const noexcept{
+		if (other.GetStatus() == 0) {
+			throw 1;
+		}
+		if (this->GetStatus() == 0) {
+			throw 1;
+		}
+		if (other.monoms.size() != monoms.size()) {
+			return false;
+		}
+		for (int i = 0; i < monoms.size(); i++) {
+			if (monoms[i] != other.monoms[i]) return false;
+		}
+		return true;
+	}
+
+	bool operator!=(const Polinom& other) const noexcept {
+		return !(*this == other);
 	}
 };
 

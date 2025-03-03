@@ -6,11 +6,11 @@
 // Множество - реализация через битовые поля
 #include <cstdlib>
 #include "Polinom.h"
-#define _USE_MATH_DEFINES
 #include <algorithm>
 #include <string>
 #include <map>
 #include <cmath>
+
 
 int Polinom::Parse(string str) {
 	status = 1;
@@ -44,7 +44,7 @@ int Polinom::Parse(string str) {
 				actual_string += str[i]; condition = Stat::Snumb1; break;
 			}
 			if (str[i] == 'x') {
-				actual_string += '1'; actual_pair.second = stod(actual_string);
+				actual_pair.second = stod(actual_string);
 				actual_string = ""; condition = Stat::Svar1_; break;
 			}
 			if (str[i] == '.') { actual_string += str[i]; condition = Stat::Snumb2; break; }
@@ -57,7 +57,7 @@ int Polinom::Parse(string str) {
 				actual_string += str[i]; condition = Stat::Snumb3; break;
 			}
 			if (str[i] == 'x') {
-				actual_string += '1'; actual_pair.first = stod(actual_string);
+				actual_pair.second = stod(actual_string);
 				actual_string = ""; condition = Stat::Svar1_; break;
 			}
 			else { condition = Stat::Error; break; }
@@ -116,19 +116,22 @@ int Polinom::Parse(string str) {
 
 
 double Polinom::Calculate(vector<double> values) {
-	if (status = 0) throw 1;
+	if (status == 0) {
+		throw 1;
+	}
+	if (values.size() != 3) {
+		throw 1;
+	}
 	double value = 0.0;
 	for (int i = 0; i < monoms.size(); i++) {
 		double monom = monoms[i].second;
 		int tmp = monoms[i].first;
-		int ind = 0;
+		int ind = 2;
 		while (tmp > 0) {
-			if (ind >= values.size()) {
-				throw 1;
-			}
-			monom *= pow(values[ind++], tmp % 10);
+			monom *= pow(values[ind--], tmp % 10);
 			tmp /= 10;
 		}
+		value += monom;
 	}
 	return value;
 }
