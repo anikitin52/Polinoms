@@ -18,13 +18,27 @@ TEST(Initialization, CanCreatePolinomForANonCorrectString)
 }
 
 
-TEST(Initialization, can_return_correct_get_status)
+TEST(Initialization, can_return_correct_get_status_for_correct_polinom_with_the_omitted_coefficient)
 {
-	Polinom p("4x^5y^9z^8+2x^3y^4z^5");
+	Polinom p("x^5y^9z^8   +x^3y^4z^5 ");
 	EXPECT_EQ(1, p.GetStatus());
 }
 
-TEST(Initialization, can_return_error_code_get_status_for_syntax_a_non_correct_string)
+TEST(Initialization, CorrectCreatePolinomWithTheOmittedCoefficient)
+{
+	Polinom p1("x^5y^9z^8+x^3y^4z^5");
+	vector<pair<unsigned int, double>> vect = { {598, 1.0}, {345, 1.0} };
+	Polinom p2(vect);
+	EXPECT_EQ(p1, p2);
+}
+
+TEST(Initialization, can_return_correct_get_status)
+{
+	Polinom p("+4x^5y^ 9z^8+2x^3y ^4z^5        ");
+	EXPECT_EQ(1, p.GetStatus());
+}
+
+TEST(Initialization, can_return_error_code_get_status_for_non_correct_string)
 {
 	Polinom p("((a + b)/7 -) 6 * sin(x) + pi");
 	EXPECT_EQ(0, p.GetStatus());
@@ -61,9 +75,9 @@ TEST(Calculate, NotCanCalculateForNotCorrectPolinom)
 
 TEST(Calculate, CorrectResultCalculateForCorrectPolinomAndIntegerVector)
 {
-	Polinom p("4x^2y^2z^4");
+	Polinom p("4x^2y^2z^4-5x^5y^3z^8");
 	vector<double> values = { 3, 5, 2 };
-	EXPECT_EQ(p.Calculate(values), 14400.0);
+	EXPECT_EQ(p.Calculate(values), -38865600.0);
 }
 
 

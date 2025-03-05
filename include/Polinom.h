@@ -67,7 +67,7 @@ public:
 		}
 		sort(monoms.rbegin(), monoms.rend());
 		status = 1;
-	} // если все double != 0 and -1 < first < 1000
+	}
 	int GetStatus() const { return status; }
 	double Calculate(vector<double> values);
 	Polinom operator+(const Polinom &other) const{  // зачем &?

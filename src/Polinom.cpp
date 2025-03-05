@@ -18,7 +18,7 @@ int Polinom::Parse(string str) {
 	enum class Stat { Error, Sadd, Snumb0, Snumb1, Snumb2, Snumb3, Sdeg1, Sdeg2, Svar1, Svar2, Svar3, Svar1_, 
 		Svar2_, Svar3_};
 	Stat condition = Stat::Sadd;
-	if (std::isdigit(str[0])) {
+	if (str[0] != '+' && str[0] != '-') {
 		str = string(1, '+') + str;
 	}
 	pair<unsigned int, double> actual_pair;
@@ -36,7 +36,7 @@ int Polinom::Parse(string str) {
 			}
 			if (str[i] == 'x') {
 				actual_string += '1'; actual_pair.second = stod(actual_string);
-				actual_string = ""; condition = Stat::Svar1; break;
+				actual_string = ""; condition = Stat::Svar1_; break;
 			}
 			else { condition = Stat::Error; break; }
 		case Stat::Snumb1:
