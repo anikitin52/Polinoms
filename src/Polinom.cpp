@@ -275,6 +275,11 @@ void Polinom::print()
     }
 }
 
+List<pair<int, double>> Polinom::get_data()
+{
+    return this->data;
+}
+
 Polinom& Polinom::operator+(Polinom pol)
 {
     for (auto el : pol.data) {
@@ -319,16 +324,30 @@ Polinom& Polinom::operator*(double c)
     return *this;
 }
 
-Polinom& Polinom::operator*(Polinom pol)
+Polinom Polinom::operator*(Polinom pol)
 {
-    List<pair<int, double>> newData;
-    for (auto el1 : data) {
-        for (auto el2 : pol.data) {
-            newData.push_back(make_pair(el1.first + el2.first, el1.second * el2.second));
+    Polinom result;
+    result.data = List<pair<int, double>>();
+
+    for (auto& el1 : data) {
+        for (auto& el2 : pol.data) {
+            int newDegree = el1.first + el2.first;
+            double newCoeff = el1.second * el2.second;
+
+            bool found = false;
+            for (auto& it : result.data) {
+                if (it.first == newDegree) {
+                    it.second += newCoeff;
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                result.data.push_back(make_pair(newDegree, newCoeff));
+            }
         }
     }
-    data = newData;
-    return *this;
+    return result;
 }
 
 Polinom& Polinom::operator/(double c)

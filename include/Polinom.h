@@ -17,9 +17,10 @@ public:
 	Polinom();
 	Polinom(string pol);
 	void print();
+	List<pair<int, double>> get_data();
 	Polinom& operator+(Polinom pol);
 	Polinom& operator-(Polinom pol);
 	Polinom& operator*(double c);
-	Polinom& operator*(Polinom pol);
+	Polinom operator*(Polinom pol);
 	Polinom& operator/(double c);
 };
