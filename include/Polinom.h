@@ -58,14 +58,16 @@ public:
 		}
 	}
 
-	Polinom(vector<pair<unsigned int, double>> _monoms) {
+	Polinom(vector<pair<unsigned int, double>> _monoms, int notsort = 0) {
 		for (int i = 0; i < _monoms.size(); i++) {
 			if (_monoms[i].second != 0) {
 				if (_monoms[i].second >= (unsigned int)1000) { throw 1; }  // нужно ли явное приведение типов?
 				monoms.push_back(_monoms[i]);
 			}
 		}
-		sort(monoms.rbegin(), monoms.rend());
+		if (!notsort) {
+			sort(monoms.rbegin(), monoms.rend());
+		}
 		status = 1;
 	}
 	int GetStatus() const { return status; }
@@ -101,7 +103,7 @@ public:
 			res_vector.push_back(monoms[i++]);
 		}
 		while (j < n2) {
-			res_vector.push_back(monoms[j++]);
+			res_vector.push_back(other.monoms[j++]);
 		}
 		return Polinom(res_vector);
 	}
@@ -125,6 +127,31 @@ public:
 		return *this + (other*(-1));
 	}
 
+	Polinom operator*(const Polinom& other) const {
+		if (GetStatus() == 0) {
+			throw 1;
+		}
+		if (other.GetStatus() == 0) {
+			throw 1;
+		}
+
+		vector<pair<unsigned int, double>> res_vect;
+		Polinom p_res(res_vect);
+		for (int i = 0; i < monoms.size(); i++) {
+			vector<pair<unsigned int, double>> res_vector;
+			for (int j = 0; j < other.monoms.size(); j++) {
+				double koef = monoms[i].first + other.monoms[j].first;
+				if (koef > 999) {
+					throw 1;
+				}
+				pair<int, double> p = { koef, monoms[i].second * other.monoms[j].second };
+				res_vector.push_back(p);
+			}
+			Polinom p_tmp(res_vector, 1);
+			p_res = p_res + p_tmp; // передача 1 отменяет сортировку при создании полинома
+		}
+		return p_res;
+	}
 
 	friend ostream& operator<<(ostream& ostr, const Polinom& pol)
 	{
