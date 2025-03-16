@@ -169,7 +169,7 @@ public:
 		return ostr;
 	}
 
-	bool operator==(const Polinom & other) const noexcept{
+	bool operator==(const Polinom & other) const {
 		if (other.GetStatus() == 0) {
 			throw 1;
 		}
