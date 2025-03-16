@@ -150,7 +150,9 @@ TEST(ArihmeticOperation, NotCanSubForNotCorrectP1orP2)
 
 TEST(ArihmeticOperation, CorrectMulConst)
 {
-	Polinom p1("0x^1y^2z^3+4.6x^5y^9z^8+25x^3y^4z^5");
+	vector<pair<unsigned int, double>> vect = { {123, 0}, {598, 4.6}, {345, 25} };
+	Polinom p1 = Polinom(vect);
+	/*("0x^1y^2z^3+4.6x^5y^9z^8+25x^3y^4z^5");*/
 	Polinom p2("-32.2x^5y^9z^8-175x^3y^4z^5");
 	Polinom p_mul = p1 * (-7);
 	EXPECT_EQ(p2, p_mul);
@@ -170,87 +172,20 @@ TEST(ArihmeticOperation, CorrectMulForNullConst)
 	Polinom p_rez = p1 * 0;
 	EXPECT_EQ(p2, p_rez);
 }
-//
-//TEST(Initialization, can_return_error_code_get_status_for_lexem_a_non_correct_string)
-//{
-//	Translator t("(a + b)/7. - 6 * 5");
-//	EXPECT_EQ(0, t.GetStatus());
-//}
-//
-//
-//TEST(Initialization, can_correct_return_get_operands)
-//{
-//	Translator t("a+b*c + sin(x)");
-//	vector<string> ans{ "a", "b", "c", "x" };
-//	EXPECT_EQ(ans, t.GetOperands());
-//}
-//
-//TEST(Calculate, can_create_calculate_for_the_correct_string)
-//{
-//	Translator t("a+2");
-//	map<string, double> values{
-//		{"a", 5}
-//	};
-//	ASSERT_NO_THROW(t.Calculate(values));
-//}
-//
-//TEST(Calculate, not_can_create_calculate_for_a_non_correct_string)
-//{
-//	Translator t("a+2))");
-//	map<string, double> values{
-//		{"a", 5}
-//	};
-//	ASSERT_ANY_THROW(t.Calculate(values));
-//}
-//
-//TEST(Calculate, not_can_create_calculate_for_a_non_correct_values_argument)
-//{
-//	Translator t("a+2))");
-//	map<string, double> values{
-//		{"a", 5}, {"b", 7}
-//	};
-//	ASSERT_ANY_THROW(t.Calculate(values));
-//}
-//
-//
-//TEST(Calculate, cant_divide_0)
-//{
-//	Translator t("a/b");
-//	map<string, double> values{
-//		{"a", 5}, {"b", 0}
-//	};
-//	ASSERT_ANY_THROW(t.Calculate(values));
-//}
-//
-//TEST(Calculate, correct_return_for_expression_with_staples)
-//{
-//	Translator t("((a + b)/7 - 5) + sin(PI/2)");
-//	map<string, double> values{
-//		{"a", 20}, {"b", 8}
-//	};
-//	double tmp = t.Calculate(values);
-//	EXPECT_EQ(0, tmp);
-//}
-//
-//TEST(Calculate, correct_return_for_correct_expression)
-//{
-//	Translator t("a*2 + 99");
-//	map<string, double> values{
-//		{"a", 1.2}
-//	};
-//	EXPECT_EQ(101.4, t.Calculate(values));
-//}
-//
-//TEST(Calculate, correct_return_for_expression_with_unary_minus_and_unary_plus)
-//{
-//	Translator t("(-7*10+5)+(+20)");
-//	map<string, double> values{};
-//	EXPECT_EQ(-45, t.Calculate(values));
-//}
-//
-//TEST(Calculate, correct_return_for_expression_with_space)
-//{
-//	Translator t("    12+   7 -6 *    2");
-//	map<string, double> values{};
-//	EXPECT_EQ(7, t.Calculate(values));
-//}
+
+TEST(ArihmeticOperation, CorrectMulPolinoms)
+{
+	Polinom p1("4.6x^2y^3z^4+25x^0y^0z^0");
+	Polinom p2("10x^3y^4z^5-7x^1y^1z^1");
+	Polinom p3("46x^5y^7z^9+217.8x^3y^4z^5-175x^1y^1z^1");
+	Polinom p12 = p1 * p2;
+	EXPECT_EQ(p12, p3);
+}
+
+TEST(ArihmeticOperation, NotCanMulForNotCorrectMulP2)
+{
+	Polinom p1("0x^1y^2z^3+4.6x^5y^9z^8+25x^3y^4z^5");
+	Polinom p2("5.4x^5y^9z^8-*/**");
+	ASSERT_ANY_THROW(p1 * p2);
+}
+
