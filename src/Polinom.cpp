@@ -1,6 +1,7 @@
 #include <vector>
 #include <ctype.h>
 #include "Polinom.h"
+#include <unordered_map>
 
 void Polinom::Parse(string pol)
 {
@@ -249,6 +250,12 @@ bool Polinom::SyntaxCheck()
     return status == State::SUCCESS;
 }
 
+void Polinom::SortData()
+{
+    std::sort(data.begin(), data.end(),
+        [](const auto& a, const auto& b) { return a.first < b.first; });
+}
+
 
 Polinom::Polinom()
 {
@@ -261,6 +268,7 @@ Polinom::Polinom(string pol)
     if (!SyntaxCheck()) {
         throw "ERROR! Invalid Syntax!";
     }
+    SortData();
     /*
     for (auto el : data) {
         cout << el.second << " " << el.first << "\n";
@@ -275,46 +283,84 @@ void Polinom::print()
     }
 }
 
-List<pair<int, double>> Polinom::get_data()
+void Polinom::printPair()
 {
-    return this->data;
+    for (auto el : data) {
+        cout << el.second << " " << el.first << "\n";
+    }
 }
 
-Polinom& Polinom::operator+(Polinom pol)
-{
-    for (auto el : pol.data) {
-        bool found = false;
-        for (auto& it : data) {
-            if (it.first == el.first) {
-                it.second += el.second;
-                found = true;
-                break;
-            }
+Polinom Polinom::operator+(const Polinom& other) const {
+    Polinom result;
+    size_t i = 0, j = 0;
+    const auto& d1 = this->get_data();
+    const auto& d2 = other.get_data();
+
+    while (i < d1.size() && j < d2.size()) {
+        if (d1[i].first < d2[j].first) {
+            result.data.push_back(d1[i]);
+            i++;
         }
-        if (!found) {
-            data.push_back(el);
+        else if (d1[i].first > d2[j].first) {
+            result.data.push_back(d2[j]);
+            j++;
+        }
+        else {
+            double sum = d1[i].second + d2[j].second;
+            if (sum != 0) {
+                result.data.emplace_back(d1[i].first, sum);
+            }
+            i++;
+            j++;
         }
     }
-    return *this;
+
+    // Добавляем остатки
+    while (i < d1.size()) result.data.push_back(d1[i++]);
+    while (j < d2.size()) result.data.push_back(d2[j++]);
+
+    return result;
 }
 
-Polinom& Polinom::operator-(Polinom pol)
-{
-    for (auto el : pol.data) {
-        bool found = false;
-        for (auto& it : data) {
-            if (it.first == el.first) {
-                it.second -= el.second;
-                found = true;
-                break;
-            }
+Polinom Polinom::operator-(const Polinom& other) const {
+    Polinom result;
+    size_t i = 0, j = 0;
+    const auto& d1 = this->get_data();
+    const auto& d2 = other.get_data();
+
+    while (i < d1.size() && j < d2.size()) {
+        if (d1[i].first < d2[j].first) {
+            result.data.push_back(d1[i]);
+            i++;
         }
-        if (!found) {
-            data.push_back(make_pair(el.first, -el.second));
+        else if (d1[i].first > d2[j].first) {
+            result.data.emplace_back(d2[j].first, -d2[j].second);
+            j++;
+        }
+        else {
+            double diff = d1[i].second - d2[j].second;
+            if (diff != 0) {
+                result.data.emplace_back(d1[i].first, diff);
+            }
+            i++;
+            j++;
         }
     }
-    return *this;
+
+    while (i < d1.size()) {
+        result.data.push_back(d1[i]);
+        i++;
+    }
+
+    while (j < d2.size()) {
+        result.data.emplace_back(d2[j].first, -d2[j].second);
+        j++;
+    }
+
+    return result;
 }
+
+
 
 Polinom& Polinom::operator*(double c)
 {
@@ -324,29 +370,36 @@ Polinom& Polinom::operator*(double c)
     return *this;
 }
 
-Polinom Polinom::operator*(Polinom pol)
-{
+Polinom Polinom::operator*(const Polinom& other) const {
     Polinom result;
-    result.data = List<pair<int, double>>();
+    std::unordered_map<int, double> temp; // Хранение промежуточных результатов
 
-    for (auto& el1 : data) {
-        for (auto& el2 : pol.data) {
-            int newDegree = el1.first + el2.first;
-            double newCoeff = el1.second * el2.second;
+    const auto& d1 = this->get_data();
+    const auto& d2 = other.get_data();
 
-            bool found = false;
-            for (auto& it : result.data) {
-                if (it.first == newDegree) {
-                    it.second += newCoeff;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                result.data.push_back(make_pair(newDegree, newCoeff));
-            }
+    // Перемножение всех пар мономов
+    for (const auto& term1 : d1) {
+        for (const auto& term2 : d2) {
+            int new_degree = term1.first + term2.first; // Складываем степени
+            double new_coeff = term1.second * term2.second; // Перемножаем коэффициенты
+
+            // Суммируем коэффициенты для одинаковых степеней
+            temp[new_degree] += new_coeff;
         }
     }
+
+    // Переносим результаты из unordered_map в вектор
+    for (const auto& term : temp) {
+        int degree = term.first;
+        double coeff = term.second;
+        if (coeff != 0) { // Игнорируем нулевые коэффициенты
+            result.data.emplace_back(degree, coeff);
+        }
+    }
+
+    // Сортируем результат
+    result.SortData();
+
     return result;
 }
 

@@ -78,27 +78,30 @@ TEST(Polinom, DegZLess0) {
 TEST(Polinom, TestPlus) {
 	Polinom pol1("3.2x^3y^1z^2+14.36x^1y^4z^3");
 	Polinom pol2("1.2x^3y^1z^2+4.36x^1y^4z^3");
-	pol1 = pol1 + pol2;
-	ASSERT_EQ(pol1.get_data()[0].second, 4.4);
-	ASSERT_EQ(pol1.get_data()[1].second, 18.72);
+	Polinom res = pol1 + pol2; 
+	ASSERT_EQ(res.get_data()[0].second, 18.72);
+	ASSERT_EQ(res.get_data()[0].first, 143);
+	ASSERT_EQ(res.get_data()[1].second, 4.4);
+	ASSERT_EQ(res.get_data()[1].first, 312);
 }
 TEST(Polinom, TestMinus) {
 	Polinom pol1("3.2x^3y^1z^2+14.36x^1y^4z^3");
 	Polinom pol2("1.2x^3y^1z^2+4.36x^1y^4z^3");
-	pol1 = pol1 - pol2;
-	ASSERT_EQ(pol1.get_data()[0].second, 2);
-	ASSERT_EQ(pol1.get_data()[1].second, 10);
+	Polinom res = pol1 - pol2;
+	ASSERT_EQ(res.get_data()[0].second, 10);
+	ASSERT_EQ(res.get_data()[0].first, 143);
+	ASSERT_EQ(res.get_data()[1].second, 2);
+	ASSERT_EQ(res.get_data()[1].first, 312);
 }
 TEST(Polinom, TestMultConst) {
 	Polinom pol1("3.2x^3y^1z^2+14.36x^1y^4z^3");
 	pol1 = pol1 * 2.5;
-	ASSERT_EQ(pol1.get_data()[0].second, 8);
-	ASSERT_EQ(pol1.get_data()[1].second, 35.9);
+	ASSERT_EQ(pol1.get_data()[0].second, 35.9);
+	ASSERT_EQ(pol1.get_data()[1].second, 8);
 }
 TEST(Polinom, MultPolinomSize) {
 	Polinom pol1("3x^3y^1z^2+2x^1y^4z^3");
 	Polinom pol2("1x^3y^1z^2+4x^1y^4z^3");
-	
 	Polinom result = pol1 * pol2;
 	ASSERT_EQ(result.get_data().size(), 3);
 }
@@ -108,9 +111,9 @@ TEST(Polinom, TestMultPolinom) {
 
 	Polinom result = pol1 * pol2;
 
-	ASSERT_EQ(result.get_data()[0].second, 3);        
+	ASSERT_EQ(result.get_data()[0].second, 8);        
 	ASSERT_EQ(result.get_data()[1].second, 14);      
-	ASSERT_EQ(result.get_data()[2].second, 8);      
+	ASSERT_EQ(result.get_data()[2].second, 3);      
 }
 TEST(Polinom, MultPolinomDeg) {
 	Polinom pol1("3x^3y^1z^2+2x^1y^4z^3");
@@ -118,14 +121,13 @@ TEST(Polinom, MultPolinomDeg) {
 
 	Polinom result = pol1 * pol2;
 
-	ASSERT_EQ(result.get_data()[0].first, 624);
+	ASSERT_EQ(result.get_data()[0].first, 286);
 	ASSERT_EQ(result.get_data()[1]. first, 455);
-	ASSERT_EQ(result.get_data()[2].first, 286);
+	ASSERT_EQ(result.get_data()[2].first, 624);
 }
 TEST(Polinom, TestDivConst) {
 	Polinom pol1("3.2x^3y^1z^2+14.36x^1y^4z^3");
 	pol1 = pol1 / 2.5;
-	ASSERT_EQ(pol1.get_data()[0].second, 1.28);
-	ASSERT_EQ(pol1.get_data()[1].second, 5.744);
+	ASSERT_EQ(pol1.get_data()[1].second, 1.28);
+	ASSERT_EQ(pol1.get_data()[0].second, 5.744);
 }
-

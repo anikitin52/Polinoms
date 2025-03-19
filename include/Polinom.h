@@ -1,26 +1,28 @@
-#include <map>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include "List.h"
 
 class Polinom {
 	int size;
-	List<pair<int, double>> data;
+	vector<pair<int, double>> data;
 
 	vector<string> polinom;           // Double числа + все остальное		
 	void Parse(string pol);           // Парсинг выражения: Строка -> Лексемы
 	bool LexicalCheck(string number); // Лексический анализ
 	bool SyntaxCheck();               // Проверка на соответствие языку 
+	void SortData();
 
 	  
 public:
 	Polinom();
 	Polinom(string pol);
 	void print();
-	List<pair<int, double>> get_data();
-	Polinom& operator+(Polinom pol);
-	Polinom& operator-(Polinom pol);
+	void printPair();
+	const std::vector<std::pair<int, double>>& get_data() const { return data; }
+	Polinom operator+(const Polinom& other) const;
+	Polinom operator-(const Polinom& other) const;
 	Polinom& operator*(double c);
-	Polinom operator*(Polinom pol);
+	Polinom operator*(const Polinom& other) const;;
 	Polinom& operator/(double c);
 };
