@@ -5,7 +5,7 @@
 
 void Polinom::Parse(string pol)
 {
-    string number; // Храним текущее число
+    string number; // Г•Г°Г Г­ГЁГ¬ ГІГҐГЄГіГ№ГҐГҐ Г·ГЁГ±Г«Г®
 
     for (char c : pol) {
         if (isdigit(c) || c == '.') {
@@ -84,7 +84,7 @@ bool Polinom::SyntaxCheck()
     double ratio;
     string degree;
     enum class State {
-        // Показывает то, что мы получили 
+        // ГЏГ®ГЄГ Г§Г»ГўГ ГҐГІ ГІГ®, Г·ГІГ® Г¬Г» ГЇГ®Г«ГіГ·ГЁГ«ГЁ 
         START,
         SIGN,
         DOUBLE_NUM,
@@ -315,7 +315,7 @@ Polinom Polinom::operator+(const Polinom& other) const {
         }
     }
 
-    // Добавляем остатки
+    // Г„Г®ГЎГ ГўГ«ГїГҐГ¬ Г®Г±ГІГ ГІГЄГЁ
     while (i < d1.size()) result.data.push_back(d1[i++]);
     while (j < d2.size()) result.data.push_back(d2[j++]);
 
@@ -372,32 +372,33 @@ Polinom& Polinom::operator*(double c)
 
 Polinom Polinom::operator*(const Polinom& other) const {
     Polinom result;
-    std::unordered_map<int, double> temp; // Хранение промежуточных результатов
+    std::unordered_map<int, double> temp; // Г•Г°Г Г­ГҐГ­ГЁГҐ ГЇГ°Г®Г¬ГҐГ¦ГіГІГ®Г·Г­Г»Гµ Г°ГҐГ§ГіГ«ГјГІГ ГІГ®Гў
 
     const auto& d1 = this->get_data();
     const auto& d2 = other.get_data();
 
-    // Перемножение всех пар мономов
+    // ГЏГҐГ°ГҐГ¬Г­Г®Г¦ГҐГ­ГЁГҐ ГўГ±ГҐГµ ГЇГ Г° Г¬Г®Г­Г®Г¬Г®Гў
     for (const auto& term1 : d1) {
         for (const auto& term2 : d2) {
-            int new_degree = term1.first + term2.first; // Складываем степени
-            double new_coeff = term1.second * term2.second; // Перемножаем коэффициенты
+            int new_degree = term1.first + term2.first; // Г‘ГЄГ«Г Г¤Г»ГўГ ГҐГ¬ Г±ГІГҐГЇГҐГ­ГЁ
+            if (new_degree > 999) throw "РЎС‚РµРїРµРЅСЊ Р±РѕР»СЊС€Рµ 9";
+            double new_coeff = term1.second * term2.second; // ГЏГҐГ°ГҐГ¬Г­Г®Г¦Г ГҐГ¬ ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ»
 
-            // Суммируем коэффициенты для одинаковых степеней
+            // Г‘ГіГ¬Г¬ГЁГ°ГіГҐГ¬ ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї Г®Г¤ГЁГ­Г ГЄГ®ГўГ»Гµ Г±ГІГҐГЇГҐГ­ГҐГ©
             temp[new_degree] += new_coeff;
         }
     }
 
-    // Переносим результаты из unordered_map в вектор
+    // ГЏГҐГ°ГҐГ­Г®Г±ГЁГ¬ Г°ГҐГ§ГіГ«ГјГІГ ГІГ» ГЁГ§ unordered_map Гў ГўГҐГЄГІГ®Г°
     for (const auto& term : temp) {
         int degree = term.first;
         double coeff = term.second;
-        if (coeff != 0) { // Игнорируем нулевые коэффициенты
+        if (coeff != 0) { // Г€ГЈГ­Г®Г°ГЁГ°ГіГҐГ¬ Г­ГіГ«ГҐГўГ»ГҐ ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ»
             result.data.emplace_back(degree, coeff);
         }
     }
 
-    // Сортируем результат
+    // Г‘Г®Г°ГІГЁГ°ГіГҐГ¬ Г°ГҐГ§ГіГ«ГјГІГ ГІ
     result.SortData();
 
     return result;
