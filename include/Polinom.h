@@ -70,6 +70,8 @@ public:
 		}
 		status = 1;
 	}
+	
+	Polinom() {}
 	int GetStatus() const { return status; }
 	double Calculate(vector<double> values);
 	Polinom operator+(const Polinom &other) const{  // зачем &?
@@ -135,8 +137,7 @@ public:
 			throw 1;
 		}
 
-		vector<pair<unsigned int, double>> res_vect;
-		Polinom p_res(res_vect);
+		Polinom p_res;
 		for (int i = 0; i < monoms.size(); i++) {
 			vector<pair<unsigned int, double>> res_vector;
 			for (int j = 0; j < other.monoms.size(); j++) {
@@ -180,7 +181,7 @@ public:
 			return false;
 		}
 		for (int i = 0; i < monoms.size(); i++) {
-			if (monoms[i] != other.monoms[i]) return false;
+			if (monoms[i] != other.monoms[i]) return false; // *
 		}
 		return true;
 	}

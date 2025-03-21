@@ -102,7 +102,7 @@ TEST(Tablice, CorrectReturnSizeForEmptyTable)
 	EXPECT_EQ(t.size(), 0);
 }
 
-/*
+
 TEST(iterator, can_create_iterator_point_to_first) {
 	Table t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
@@ -112,7 +112,7 @@ TEST(iterator, can_create_iterator_point_to_first) {
 	t.Insert("2x^3y^4z^5", p2);
 	t.Insert("8x^3y^4z^5", p3);
     Table::iterator it1 = t.begin();
-    EXPECT_EQ(it1.value(), p1);
+    EXPECT_EQ(*it1, p1);
 }
 
 
@@ -126,10 +126,9 @@ TEST(iterator, can_increment_the_iterator_by_a_number) {
 	t.Insert("8x^3y^4z^5", p3);
 	Table::iterator it1(t.begin());
 	it1 + 2;
-	EXPECT_EQ(it1.value(), p3);
-	EXPECT_EQ(it1.key(), "8x^3y^4z^5");
+	EXPECT_EQ(*it1, p3);
+	EXPECT_EQ(it1.GetKey(), "8x^3y^4z^5");
 }
-
 
 TEST(iterator, correct_prefix_increment) {
 	Table t;
@@ -140,8 +139,8 @@ TEST(iterator, correct_prefix_increment) {
 	t.Insert("2x^3y^4z^5", p2);
 	t.Insert("8x^3y^4z^5", p3);
 	Table::iterator it1(t.begin());
-    EXPECT_EQ((it1++).value(), p1);
-    EXPECT_EQ(it1.value(), p2);
+    EXPECT_EQ(*(it1++), p1);
+    EXPECT_EQ(*it1, p2);
 }
 
 
@@ -154,8 +153,8 @@ TEST(iterator, correct_postfix_increment) {
 	t.Insert("2x^3y^4z^5", p2);
 	t.Insert("8x^3y^4z^5", p3);
 	Table::iterator it1(t.begin());
-	EXPECT_EQ((++it1).value(), p2);
-	EXPECT_EQ(it1.value(), p2);
+	EXPECT_EQ(*(++it1), p2);
+	EXPECT_EQ(*it1, p2);
 }
 
 
@@ -172,4 +171,3 @@ TEST(iterator, correct_end_iterator) {
 	it1 + t.size();
 	EXPECT_EQ(it1, it2);
 }
-*/
