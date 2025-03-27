@@ -1,14 +1,14 @@
-#include "SortedTable.h"
+п»ї#include "SortedTable.h"
 
 
 void SortedTable::Insert(string key, Polinom value)
 {
-	if (Find(key)) throw "Key is already exists"; // Проверка на наличие ключа
+	if (Find(key)) throw "Key is already exists"; // ГЏГ°Г®ГўГҐГ°ГЄГ  Г­Г  Г­Г Г«ГЁГ·ГЁГҐ ГЄГ«ГѕГ·Г 
 	int size = data.size();
 	int min = 0, max = size - 1;
-	int posToInsert = size; // По умолчанию вставляем в конец
+	int posToInsert = size; // ГЏГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ ГўГ±ГІГ ГўГ«ГїГҐГ¬ Гў ГЄГ®Г­ГҐГ¶
 
-	// Бинарный поиск позиции для вставки 
+	// ГЃГЁГ­Г Г°Г­Г»Г© ГЇГ®ГЁГ±ГЄ ГЇГ®Г§ГЁГ¶ГЁГЁ Г¤Г«Гї ГўГ±ГІГ ГўГЄГЁ 
 	while (min <= max) {
 		int midle = min + (max - min) / 2;
 		if (data[midle].key < key) min = midle + 1;
@@ -18,33 +18,46 @@ void SortedTable::Insert(string key, Polinom value)
 		}
 	}
 
-	// Вставка в нужную позицию
+	// Г‚Г±ГІГ ГўГЄГ  Гў Г­ГіГ¦Г­ГіГѕ ГЇГ®Г§ГЁГ¶ГЁГѕ
 	data.insert(data.begin() + posToInsert, TableLine(key, value));
 
 }
 
 void SortedTable::Delete(string key)
 {
-	Polinom* ptrToDel = Find(key); // Посик указателя на удаляемый элемент
-	if (!ptrToDel) throw "No Element!"; // Проверка существования элемента
+	Polinom* ptrToDel = Find(key); // ГЏГ®Г±ГЁГЄ ГіГЄГ Г§Г ГІГҐГ«Гї Г­Г  ГіГ¤Г Г«ГїГҐГ¬Г»Г© ГЅГ«ГҐГ¬ГҐГ­ГІ
+	if (!ptrToDel) throw "No Element!"; // ГЏГ°Г®ГўГҐГ°ГЄГ  Г±ГіГ№ГҐГ±ГІГўГ®ГўГ Г­ГЁГї ГЅГ«ГҐГ¬ГҐГ­ГІГ 
+	bool findElem = false;
+	for (int i = 0; i < data.size()-1; i++) {
+		if (&data[i].value == ptrToDel) {
+			findElem = true;
+		}
+		if (findElem == true) {
+			swap(data[i], data[i + 1]);
+		}
+	}
+	data.pop_back();
+	/*
 	vector<TableLine> newdata; 
 	for (auto& el : data) {
 		if (&el.value != ptrToDel) {
 			newdata.push_back(el);
 		}
 	}
-	this->data = newdata; // Перезапись двнных
+	this->data = newdata; // ГЏГҐГ°ГҐГ§Г ГЇГЁГ±Гј Г¤ГўГ­Г­Г»Гµ
+	*/
+	// Р±РµР· РґРѕРї РІРµРєС‚РѕСЂР° РґРІРёРіР°РµРј РІ РєРѕРЅРµС†
 }
 
 Polinom* SortedTable::Find(string key)
 {
-	// Бинарный поиск
+	// ГЃГЁГ­Г Г°Г­Г»Г© ГЇГ®ГЁГ±ГЄ
 	int size = data.size();
 	int min = 0, max = size - 1;
 	while (min <= max) {
 		int midle = min + (max - min) / 2;
 		if (data[midle].key == key) {
-			return &data[midle].value; // Ключ найден
+			return &data[midle].value; // ГЉГ«ГѕГ· Г­Г Г©Г¤ГҐГ­
 		}
 		if (data[midle].key < key) {
 			min = midle + 1;
