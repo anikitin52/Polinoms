@@ -16,6 +16,19 @@ AVLtree::Node* AVLtree::Delete(string key)
 
 Polinom* AVLtree::Find(string key)
 {
+	Node* current = root;
+
+	while (current != nullptr) {
+		if (key == current->data.key) {
+			return &current->data.value;
+		}
+		else if (key < current->data.key) {
+			current = current->left;
+		}
+		else {
+			current = current->right;
+		}
+	}
 	return nullptr;
 }
 
