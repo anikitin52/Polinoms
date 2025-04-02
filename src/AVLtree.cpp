@@ -1,6 +1,21 @@
 #include "AVLtree.h"
 
-void AVLtree::Insert(string key, Polinom value)
+AVLtree::~AVLtree()
 {
-	return;
 }
+
+AVLtree::Node* AVLtree::Insert(string key, Polinom value)
+{
+	return nullptr;
+}
+
+AVLtree::Node* AVLtree::Delete(string key)
+{
+	return nullptr;
+}
+
+Polinom* AVLtree::Find(string key)
+{
+	return nullptr;
+}
+
