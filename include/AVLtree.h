@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include "Polinom.h"
+#include <stack>
 
 class AVLtree {
 private:
@@ -48,4 +49,63 @@ public:
     Node* Insert(string key, Polinom value);
     Node* Delete(string key);
     Polinom* Find(string key);
+
+    class Iterator {
+    private:
+        Node* current;
+        std::stack<Node*> stack;
+
+        void pushLeft(Node* node) {
+            while (node) {
+                stack.push(node);
+                node = node->left;
+            }
+        }
+
+    public:
+        Iterator(Node* root) {
+            pushLeft(root);
+            if (!stack.empty()) {
+                current = stack.top();
+                stack.pop();
+            }
+            else {
+                current = nullptr;
+            }
+        }
+
+        Iterator& operator++() {
+            if (current->right) {
+                pushLeft(current->right);
+            }
+            if (!stack.empty()) {
+                current = stack.top();
+                stack.pop();
+            }
+            else {
+                current = nullptr;
+            }
+            return *this;
+        }
+
+        bool operator!=(const Iterator& other) const {
+            return current != other.current;
+        }
+
+        Element& operator*() {
+            return current->data;
+        }
+    };
+
+    Iterator begin() {
+        Node* node = root;
+        while (node && node->left) {
+            node = node->left;
+        }
+        return Iterator(root);
+    }
+
+    Iterator end() {
+        return Iterator(nullptr);
+    }
 };
