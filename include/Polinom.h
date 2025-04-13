@@ -50,11 +50,9 @@ public:
 		int result = Parse(src_str);  // Parse() заполянет поле status в зависимости от корректности строки
 		if ((result < 0) || (result > 0)) {
 			status = 0;
-			cout << "error code : " << result << endl;
 		}
 		else {
 			sort(monoms.rbegin(), monoms.rend());  // нужен ли отдельный тест?
-			cout << "that's all right!" << endl;
 		}
 	}
 
