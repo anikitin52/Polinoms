@@ -355,7 +355,7 @@ public:
 
 	bool InCorrectBalanceTree() {
 		if (!root) return true;
-		root->InCorrectBalanceNode();
+		return root->InCorrectBalanceNode();  // здесь была ошибка - забыла return, в результате возвращалось произвольное натуральное число
 	}
 
 

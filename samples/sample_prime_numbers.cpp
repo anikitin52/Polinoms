@@ -20,10 +20,13 @@ int main()
 	t.Insert("1", p1);
 	t.Insert("2", p2);
 	t.Insert("8", p3);
-	t.print();
-	t.Delete("8");
-	t.print();
-	cout << t.InCorrectBalanceTree() << endl;
-	cout << t.size();
+	// дядя красный
+	t.Insert("9", p3);
+	bool correct = (t.size() == 4) && t.InCorrectBalanceTree();
+	cout << "Hallo";
+	cout << t.size() << endl;
+	cout << t.InCorrectBalanceTree();
+	//cout << t.InCorrectBalanceTree() << endl;
+	//cout << t.size();
 }
 #endif
