@@ -284,11 +284,12 @@ TEST(RedBlackTree, DeleteSituation4)
 TEST(RedBlackTree, DeleteBalanceAllSituation)
 {
 	RedBlackTree t;
+	bool correct = true;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	for (int i = 0; i < 10; i++) {
 		t.Insert(std::to_string(i), p1);
+		correct = correct && (t.size() == i + 1) && t.InCorrectBalanceTree(); // balance and correct size
 	}
-	bool correct = (t.size() == 10) && t.InCorrectBalanceTree();
 	//t.print();
 	for (int i = 0; i < 10; i++) {
 		//cout << i << " ";
@@ -312,6 +313,158 @@ TEST(RedBlackTree, ConstrutrorCopy)
 	bool correct = (t2.size() == 10) && (t2.InCorrectBalanceTree());
 	EXPECT_EQ(correct, true);
 }
+
+TEST(RedBlackTree, ConstrutrorCopyForEmptyTree)
+{
+	RedBlackTree t1;
+	RedBlackTree t2(t1);
+	EXPECT_EQ(t2.Empty(), true);
+}
+
+TEST(RedBlackTree, AssignmentOperator)
+{
+	RedBlackTree t1;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	for (int i = 0; i < 10; i++) {
+		t1.Insert(std::to_string(i), p1);
+	}
+	RedBlackTree t2;
+	for (int i = 0; i < 3; i++) {
+		t2.Insert(std::to_string(i), p1);
+	}
+	t2 = t1;
+	bool correct = (t2.size() == 10) && (t2.InCorrectBalanceTree());
+	EXPECT_EQ(correct, true);
+}
+
+TEST(RedBlackTree, AssignmentOperatorForThis)
+{
+	RedBlackTree t1;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	for (int i = 0; i < 10; i++) {
+		t1.Insert(std::to_string(i), p1);
+	}
+	t1 = t1;
+	bool correct = (t1.size() == 10) && (t1.InCorrectBalanceTree());
+	EXPECT_EQ(correct, true);
+}
+
+TEST(RedBlackTree, AssignmentOperatorForEmptyTree)
+{
+	RedBlackTree t1;
+	RedBlackTree t2 = t1;
+	EXPECT_EQ(t2.Empty(), true);
+}
+
+
+
+TEST(IteratorRedBlackTree, CorrectBegin)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("2", p2);
+	t.Insert("3", p3);
+	t.Insert("1", p1);
+	t.Insert("4", p3);
+	t.Insert("5", p3);
+	t.Insert("6", p3);
+	RedBlackTree::iterator it = t.begin();
+	bool correct = *it == p1;
+	EXPECT_EQ(correct, true);
+}
+
+TEST(IteratorRedBlackTree, CorrectEnd)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("2", p2);
+	t.Insert("3", p3);
+	t.Insert("1", p1);
+	t.Insert("4", p3);
+	t.Insert("5", p3);
+	t.Insert("6", p3); 
+	RedBlackTree::iterator it = t.begin();
+	for (int _ = 0; _ < 6; _++) it++;
+	EXPECT_EQ(it, t.end());
+}
+
+TEST(IteratorRedBlackTree, CorrectPrefix)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("2", p1);
+	t.Insert("3", p3);
+	t.Insert("1", p3);
+	t.Insert("4", p3);
+	t.Insert("5", p3);
+	t.Insert("6", p3);
+	RedBlackTree::iterator it = t.begin();
+	bool correct = *(++it) == p1;
+	correct = correct && (*it == p1);
+	EXPECT_EQ(correct, true);
+}
+
+TEST(IteratorRedBlackTree, CorrectPostfix)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("2", p2);
+	t.Insert("3", p3);
+	t.Insert("1", p1);
+	t.Insert("4", p3);
+	t.Insert("5", p3);
+	t.Insert("6", p3);
+	RedBlackTree::iterator it = t.begin();
+	bool correct = *(it++) == p1;
+	correct = correct && (*it == p2);
+	EXPECT_EQ(correct, true);
+}
+
+
+
+TEST(IteratorRedBlackTree, CorrectBeginPostInsert)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("4", p3);
+	t.Insert("3", p1);
+	RedBlackTree::iterator it = t.begin();
+	t.Insert("1", p3);
+	t.Insert("2", p3);
+	t.Insert("5", p3);
+	t.Insert("6", p3);
+	EXPECT_EQ(*it, p1);
+}
+
+
+TEST(IteratorRedBlackTree, CorrectAndNumber)
+{
+	RedBlackTree t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("2", p2);
+	t.Insert("3", p3);
+	t.Insert("1", p3);
+	t.Insert("4", p3);
+	t.Insert("5", p1);
+	t.Insert("6", p3);
+	RedBlackTree::iterator it = t.begin();
+	bool correct = *(it + 4) == p1;
+	correct = correct && (*it == p1);
+	EXPECT_EQ(correct, true);
+}
+
 
 TEST(RedBlackTree, MillionElements)
 {

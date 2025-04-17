@@ -254,7 +254,90 @@ class RedBlackTree {
 	}
 
 public:
-	// конструктор, диструктор, оператор=, копирования
+
+	class iterator {
+		Node* node;
+	public:
+		explicit iterator(Node* _node) : node(_node) {}
+		iterator& operator++() {
+			if (!node) throw 1;
+			if (node->right->data) {
+				node = node->right;
+				while (node->left->data) {
+					node = node->left;
+				}
+				return *this;
+			}
+			while (node->parent) {
+				if (node->parent->left == node) {
+					node = node->parent;
+					return *this;
+				}
+				else {
+					node = node->parent;
+				}
+			}
+			node = nullptr;
+			return *this;
+		}
+
+
+		iterator operator++(int) {
+			if (!node) throw 1;
+			iterator tmp = *this;
+			if (node->right->data) {
+				node = node->right;
+				while (node->left->data) {
+					node = node->left;
+				}
+				return tmp;
+			}
+			while (node->parent) {
+				if (node->parent->left == node) {
+					node = node->parent;
+					return tmp;
+				}
+				else {
+					node = node->parent;
+				}
+			}
+			node = nullptr;
+			return tmp;
+		}
+
+		iterator& operator+(int n) {
+			while (n--) {
+				(*this)++;
+			}
+			return *this;
+		}
+
+		Polinom& operator*() {
+			if (!node) throw 1;
+			return *(node->data);
+		}
+		Polinom* operator->() {
+			if (!node) throw 1;
+			return node->data;
+		}
+		friend bool operator!=(const iterator& it1, const iterator& it2) {
+			return (it1.node != it2.node);
+		}
+		friend bool operator==(const iterator& it1, const iterator& it2) {
+			return (it1.node == it2.node);
+		}
+	};
+
+	iterator& begin() {  // можно не const?
+		if (!root) return iterator(nullptr);
+		Node* min_elem = root;
+		while (min_elem->left->data) min_elem = min_elem->left;
+		return iterator(min_elem);
+	}
+
+	iterator& end() const {
+		return iterator(nullptr);
+	}
 
 	~RedBlackTree() {
 		delete root;
@@ -303,6 +386,31 @@ public:
 				remaining.pop_back();
 			}
 		}
+	}
+
+	RedBlackTree& operator=(const RedBlackTree& other) {
+		if (this == &other) return *this;
+		delete root;
+		root = nullptr;
+		std::vector<Node*> remaining;
+		Node* cur = other.root;
+		while (cur) {
+			if (cur->data) Insert(cur->key, *(cur->data));
+			if (cur->right->data) {
+				remaining.push_back(cur->right);
+			}
+			if (cur->left->data) {
+				cur = cur->left;
+			}
+			else if (remaining.empty()) {
+				break;
+			}
+			else {
+				cur = remaining.back();
+				remaining.pop_back();
+			}
+		}
+		return *this;
 	}
 
 
