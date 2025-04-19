@@ -13,19 +13,60 @@ class HashTable {
 
 	// SIZE - число, на которое будет увеличиваться размер таблицы при каждой перепаковке, и первый размер таблицы
 
-	unsigned int NOD(unsigned int a, unsigned int b) const {
-		if (a % b == 0)
-			return b;
-		if (b % a == 0)
-			return a;
-		if (a > b)
-			return NOD(a % b, b);
-		return NOD(a, b % a);
+public:
+	class iterator {
+		tuple<string, Polinom, bool, bool>* it;
+	public:
+		iterator(tuple<string, Polinom, bool, bool>* _it): it(_it) {}
+		iterator& operator++() {
+			if (it->key == "END") throw 1;
+			it += 1;
+			return *this;
+		}
+		iterator operator++(int) {
+			iterator tmp = *this;
+			if (it->key == "END") throw 1;
+			it += 1;
+			return tmp;
+		}
+
+		iterator& operator+(int n) {
+			while (n--) {
+				(*this)++;
+			}
+			return *this;
+		}
+
+		Polinom& operator*() {
+			if (it->key == "END") throw 1;
+			return std::get<1>(it);
+		}
+
+		Polinom* operator->() {
+			if (it->key == "END") throw 1;
+			return std::get<2>(it);
+		}
+
+		friend bool operator!=(const iterator& it1, const iterator& it2) {
+			return (it1.it != it2.it);
+		}
+		friend bool operator==(const iterator& it1, const iterator& it2) {
+			return (it1.it == it2.it);
+		}
+	};
+
+	iterator& begin() {  // можно не const?
+		if (SIZE == 0) return end();
+		return iterator(Rows[0]);
 	}
 
-public:
+	iterator& end() const {
+		return iterator(Rows[size_table]);
+	}
+
 	HashTable() : Rows(nullptr), size_table(SIZE), actual_size_table(0), p(7){
-		Rows = new tuple<string, Polinom, bool, bool>[size_table];
+		Rows = new tuple<string, Polinom, bool, bool>[size_table + 1];
+		std::get<0>(Rows[size_table]) = "END";
 		// как использовать функцию, которая не относится к самому классу, но нужна в методах
 	}
 
@@ -36,7 +77,8 @@ public:
 		size_table = other.size_table;
 		p = other.p;
 		actual_size_table = other.actual_size_table;
-		Rows = new tuple<string, Polinom, bool, bool>[size_table];
+		Rows = new tuple<string, Polinom, bool, bool>[size_table + 1];
+		std::get<0>(Rows[size_table]) = "END";
 		for (int i = 0; i < size_table; i++) {
 			Rows[i] = other.Rows[i];
 		}
@@ -48,7 +90,8 @@ public:
 		size_table = other.size_table;
 		p = other.p;
 		actual_size_table = other.actual_size_table;
-		Rows = new tuple<string, Polinom, bool, bool>[size_table];
+		Rows = new tuple<string, Polinom, bool, bool>[size_table + 1];
+		std::get<0>(Rows[size_table]) = "END";
 		for (int i = 0; i < size_table; i++) {
 			Rows[i] = other.Rows[i];
 		}
