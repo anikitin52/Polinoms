@@ -28,7 +28,7 @@ TEST(AVLtree, InsertIntoEmptyTree) {
 	tree.Insert("a", p1);
 
 	ASSERT_NE(tree.Find("a"), nullptr);
-}/*
+}
 TEST(AVLtree, InsertMillionElements) {
 	AVLtree tree;
 
@@ -40,7 +40,6 @@ TEST(AVLtree, InsertMillionElements) {
 		if (i % 100000 == 0) cout << i << "\n";
 	}
 }
-*/
 TEST(AVLtree, CorrectInsertToLeftSubtreeCausesRightRotation) {
 	AVLtree tree;
 	tree.Insert("c", Polinom("1"));
