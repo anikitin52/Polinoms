@@ -1,4 +1,4 @@
-﻿#ifndef USE_SET﻿
+﻿
 #include <iostream>
 #include <string>
 #include "SortedTable.h"
