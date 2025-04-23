@@ -17,12 +17,20 @@ public:
 	public:
 		explicit iterator(vector<TabliceElement>::iterator _it) : it(_it) {}
 
-		iterator& operator++() {
+		iterator operator++() {
 			return iterator(++it);
 		}
 
-		iterator& operator++(int) {
-			return iterator(it++);   // нельзя проверить вышли ли за границы
+		iterator operator++(int) {
+			return iterator(it++);
+		}
+
+		Polinom& operator*() {
+			return (*it).value;
+		}
+
+		Polinom* operator->() {
+			return &((*it).value);
 		}
 
 		iterator& operator+(int n) {
@@ -32,11 +40,7 @@ public:
 			return *this;
 		}
 
-		Polinom& value() {
-			TabliceElement t_tmp = *it;
-			return t_tmp.value;
-		}
-		string key() { return (*it).key; }
+		string GetKey() { return (*it).key; }
 
 		// operator-> не имеет смысла?
 
@@ -48,12 +52,12 @@ public:
 		}
 	};
 
-	iterator& begin() {
+	iterator begin() {   // можно ли убирать ссылку?
 		auto it = data.begin();
 		return iterator(it);
 	}
 
-	iterator& end() {
+	iterator end() {
 		return iterator(data.end());
 	}
 
@@ -69,7 +73,7 @@ public:
 		}
 		return false;
 	}
-	Polinom* Find(string key) noexcept {  // const метод накладывает ограничение также и на возвращаемый тип?
+	Polinom* Find(string key) noexcept {  // const метод накладывает ограничение также и на возвращаемый тип
 		for (auto& val: data) {
 			if (val.key == key) {
 				return &val.value;
