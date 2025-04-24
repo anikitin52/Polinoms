@@ -26,13 +26,13 @@ HashTable::HashTable(int size = 10): capacity(size), data(size)
 
     a = dist(gen);
     b = dist(gen);
-
-    // Гарантируем, что a != 0
-    if (a == 0) a = 1;
 }
 
 void HashTable::Insert(string key, Polinom value)
 {
+    int full = count / capacity;
+    if (full >= max_full) resize();
+
     size_t index = hash(key);
     for (auto& pair : data[index]) {
         if (pair.first == key) {
@@ -41,6 +41,7 @@ void HashTable::Insert(string key, Polinom value)
         }
     }
     data[index].emplace_back(key, value);
+    count++;
 }
 
 void HashTable::Delete(string key)
@@ -53,6 +54,7 @@ void HashTable::Delete(string key)
             return;
         }
     }
+    count--;
 }
 
 Polinom HashTable::Find(string key)

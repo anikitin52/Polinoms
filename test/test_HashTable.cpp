@@ -94,7 +94,7 @@ TEST(HashTable, RehashStress) {
 }
 
 TEST(HashTable, InsertMillionElements) {
-    HashTable t1(1000000);
+    HashTable t1(10);
 
     Polinom p1("4x^5y^9z^8+2x^3y^4z^5");
     const int million = 1000000;
