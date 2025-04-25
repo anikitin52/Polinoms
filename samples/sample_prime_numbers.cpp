@@ -4,6 +4,5 @@
 
 int main()
 {
-	SortedTable<int, string> t1;
-	return 0;
+	
 }
