@@ -19,14 +19,22 @@ public:
 	public:
 		iterator(tuple<string, Polinom, bool, bool>* _it): it(_it) {}
 		iterator& operator++() {
-			if (it->key == "END") throw 1;
+			if (std::get<0>(*it) == "END") throw 1;
 			it += 1;
+			while (!(std::get<2>(*it)) && (std::get<0>(*it) != "END")) {
+				it += 1;
+			}
 			return *this;
 		}
+
 		iterator operator++(int) {
 			iterator tmp = *this;
-			if (it->key == "END") throw 1;
+			if (std::get<0>(*it) == "END") { throw 1; }
 			it += 1;
+			while (!std::get<2>(*it) && (std::get<0>(*it) != "END"))
+			{
+				it += 1;
+			}
 			return tmp;
 		}
 
@@ -38,30 +46,32 @@ public:
 		}
 
 		Polinom& operator*() {
-			if (it->key == "END") throw 1;
-			return std::get<1>(it);
+			if (std::get<0>(*it) == "END") throw 1;
+			return std::get<1>(*it);
 		}
 
 		Polinom* operator->() {
-			if (it->key == "END") throw 1;
-			return std::get<2>(it);
+			if (std::get<0>(*it) == "END") throw 1;
+			return std::get<2>(*it);
 		}
 
 		friend bool operator!=(const iterator& it1, const iterator& it2) {
 			return (it1.it != it2.it);
 		}
+
 		friend bool operator==(const iterator& it1, const iterator& it2) {
 			return (it1.it == it2.it);
 		}
 	};
 
 	iterator& begin() {  // можно не const?
-		if (SIZE == 0) return end();
-		return iterator(Rows[0]);
+		if (actual_size_table == 0) return end();
+		if (std::get<2>(Rows[size_table])) return iterator(&Rows[0]);
+		return ++iterator(&Rows[0]);
 	}
 
 	iterator& end() const {
-		return iterator(Rows[size_table]);
+		return iterator(&Rows[size_table]);
 	}
 
 	HashTable() : Rows(nullptr), size_table(SIZE), actual_size_table(0), p(7){
