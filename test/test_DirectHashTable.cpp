@@ -212,3 +212,94 @@ TEST(HashTable, FillingAndEmptying)
 	correct = correct && (t.GetActualSize() == 0);
 	EXPECT_EQ(correct, true);
 }
+
+
+TEST(HashTableiterator, can_create_iterator_point_to_first) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	EXPECT_EQ(*it1, p1);
+}
+
+
+
+TEST(HashTableiterator, can_increment_the_iterator_by_a_number) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	it1 + 2;
+	EXPECT_EQ(*it1, p3);
+}
+
+TEST(HashTableiterator, correct_prefix_increment) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	EXPECT_EQ(*(it1++), p1);
+	EXPECT_EQ(*it1, p2);
+}
+
+TEST(HashTableiterator, correct_postfix_increment) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	EXPECT_EQ(*(++it1), p2);
+	EXPECT_EQ(*it1, p2);
+}
+
+
+TEST(HashTableiterator, correct_end_iterator) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	HashTable<10>::iterator it2 = t.end();
+	it1 + t.GetActualSize();
+	EXPECT_EQ(it1, it2);
+}
+
+
+TEST(HashTableiterator, not_can_add_more_actual_size) {
+	HashTable<10> t;
+	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
+	Polinom p2("2x ^ 3y ^ 4z ^ 5");
+	Polinom p3("8x^3y^4z^5");
+	t.Insert("5", p1);
+	t.Insert("6", p2);
+	t.Insert("7", p3);
+	HashTable<10>::iterator it1 = t.begin();
+	HashTable<10>::iterator it2 = t.end();
+	it1 + t.GetActualSize();
+	ASSERT_ANY_THROW(it1 + 1);
+}
+
+TEST(HashTableiterator, equality_end_begin_for_empty_table) {
+	HashTable<10> t;
+	HashTable<10>::iterator it1 = t.begin();
+	HashTable<10>::iterator it2 = t.end();
+	EXPECT_EQ(it1, it2);
+}
