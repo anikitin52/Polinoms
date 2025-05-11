@@ -5,21 +5,21 @@
 #include "DirectHashTable.h"
 
 
-TEST(HashTable, CanCreateTable)
+TEST(DirectHashTable, CanCreateTable)
 {
-	ASSERT_NO_THROW(HashTable<10> t());
+	ASSERT_NO_THROW(DirectHashTable<10> t());
 }
 
-TEST(HashTable, CanInsertTable)
+TEST(DirectHashTable, CanInsertTable)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p("0x^5y^9z^8+1x^3y^4z^5");
 	EXPECT_EQ(t.Insert("1x^3y^4z^5", p), true);
 }
 
-TEST(HashTable, NotCanInsertExistsKey)
+TEST(DirectHashTable, NotCanInsertExistsKey)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
@@ -30,17 +30,17 @@ TEST(HashTable, NotCanInsertExistsKey)
 }
 
 
-TEST(HashTable, CanDeleteTable)
+TEST(DirectHashTable, CanDeleteTable)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p("0x^5y^9z^8+1x^3y^4z^5");
 	t.Insert("1x^3y^4z^5", p);
 	EXPECT_EQ(t.Delete("1x^3y^4z^5"), true);
 }
 
-TEST(HashTable, NotCanDeleteNotKey)
+TEST(DirectHashTable, NotCanDeleteNotKey)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
@@ -50,9 +50,9 @@ TEST(HashTable, NotCanDeleteNotKey)
 	EXPECT_EQ(t.Delete("7x^3y^4z^5"), false);
 }
 
-TEST(HashTable, CorrectFind)
+TEST(DirectHashTable, CorrectFind)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
@@ -62,9 +62,9 @@ TEST(HashTable, CorrectFind)
 	EXPECT_EQ(*t.Find("2x^3y^4z^5"), p2);
 }
 
-TEST(HashTable, CorrectFindForNotKey)
+TEST(DirectHashTable, CorrectFindForNotKey)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
@@ -73,9 +73,9 @@ TEST(HashTable, CorrectFindForNotKey)
 	t.Insert("8x^3y^4z^5", p3);
 	EXPECT_EQ(t.Find("5"), nullptr);
 }
-TEST(HashTable, CanModernizirenFind)
+TEST(DirectHashTable, CanModernizirenFind)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
@@ -87,9 +87,9 @@ TEST(HashTable, CanModernizirenFind)
 }
 
 
-TEST(HashTable, RepackingForInsertElementsTheAmountIsMoreThanTheLimit)
+TEST(DirectHashTable, RepackingForInsertElementsTheAmountIsMoreThanTheLimit)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	bool correct = (t.GetSize() == 10);
 
@@ -105,9 +105,9 @@ TEST(HashTable, RepackingForInsertElementsTheAmountIsMoreThanTheLimit)
 }
 
 
-TEST(HashTable, FindPostDelete)
+TEST(DirectHashTable, FindPostDelete)
 {
-	HashTable<100> t;
+	DirectHashTable<100> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("41x^3y^4z^5");
 	// ключи так подобраны, что проецируютс€ на одну €чейку таблицы
@@ -123,9 +123,9 @@ TEST(HashTable, FindPostDelete)
 }
 
 
-TEST(HashTable, ConstrutrorCopy)
+TEST(DirectHashTable, ConstrutrorCopy)
 {
-	HashTable<100> t;
+	DirectHashTable<100> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("41x^3y^4z^5");
 	// ключи так подобраны, что проецируютс€ на одну €чейку таблицы
@@ -135,24 +135,24 @@ TEST(HashTable, ConstrutrorCopy)
 	t.Insert("E", p2);
 	t.Delete(std::to_string(7));
 	t.Delete(">");
-	HashTable<100> t2(t);
+	DirectHashTable<100> t2(t);
 	bool correct = (t2.GetActualSize() == 2) && (*t2.Find("E") == p2) && (*t.Find("0") == p1);
 	EXPECT_EQ(correct, true);
 }
 
-TEST(HashTable, ConstrutrorCopyForEmptyTable)
+TEST(DirectHashTable, ConstrutrorCopyForEmptyTable)
 {
-	HashTable<100> t;
-	HashTable<100> t2(t);
+	DirectHashTable<100> t;
+	DirectHashTable<100> t2(t);
 	bool correct = (t2.GetActualSize() == 0);
 	EXPECT_EQ(correct, true);
 }
 
 
-TEST(HashTable, AssignmentOperator)
+TEST(DirectHashTable, AssignmentOperator)
 {
-	HashTable<5> t2;
-	HashTable<5> t;
+	DirectHashTable<5> t2;
+	DirectHashTable<5> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("41x^3y^4z^5");
 
@@ -170,9 +170,9 @@ TEST(HashTable, AssignmentOperator)
 	EXPECT_EQ(correct, true);
 }
 
-TEST(HashTable, AssignmentOperatorForThis)
+TEST(DirectHashTable, AssignmentOperatorForThis)
 {
-	HashTable<5> t;
+	DirectHashTable<5> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("41x^3y^4z^5");
 	// ключи так подобраны, что проецируютс€ на одну €чейку таблицы
@@ -187,18 +187,18 @@ TEST(HashTable, AssignmentOperatorForThis)
 	EXPECT_EQ(correct, true);
 }
 
-TEST(HashTable, AssignmentOperatorForEmptyTable)
+TEST(DirectHashTable, AssignmentOperatorForEmptyTable)
 {
-	HashTable<100> t;
-	HashTable<100> t2 = t;
+	DirectHashTable<100> t;
+	DirectHashTable<100> t2 = t;
 	bool correct = (t2.GetActualSize() == 0);
 	EXPECT_EQ(correct, true);
 }
 
 
-TEST(HashTable, FillingAndEmptying)
+TEST(DirectHashTable, FillingAndEmptying)
 {
-	HashTable<10> t;
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("41x^3y^4z^5");
 	// ключи так подобраны, что проецируютс€ на одну €чейку таблицы
@@ -214,92 +214,92 @@ TEST(HashTable, FillingAndEmptying)
 }
 
 
-TEST(HashTableiterator, can_create_iterator_point_to_first) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, can_create_iterator_point_to_first) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it1 = t.begin();
 	EXPECT_EQ(*it1, p1);
 }
 
 
 
-TEST(HashTableiterator, can_increment_the_iterator_by_a_number) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, can_increment_the_iterator_by_a_number) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it1 = t.begin();
 	it1 + 2;
 	EXPECT_EQ(*it1, p3);
 }
 
-TEST(HashTableiterator, correct_prefix_increment) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, correct_prefix_increment) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it1 = t.begin();
 	EXPECT_EQ(*(it1++), p1);
 	EXPECT_EQ(*it1, p2);
 }
 
-TEST(HashTableiterator, correct_postfix_increment) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, correct_postfix_increment) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it1 = t.begin();
 	EXPECT_EQ(*(++it1), p2);
 	EXPECT_EQ(*it1, p2);
 }
 
 
-TEST(HashTableiterator, correct_end_iterator) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, correct_end_iterator) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
-	HashTable<10>::iterator it2 = t.end();
+	DirectHashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it2 = t.end();
 	it1 + t.GetActualSize();
 	EXPECT_EQ(it1, it2);
 }
 
 
-TEST(HashTableiterator, not_can_add_more_actual_size) {
-	HashTable<10> t;
+TEST(DirectHashTableiterator, not_can_add_more_actual_size) {
+	DirectHashTable<10> t;
 	Polinom p1("0x^5y^9z^8+1x^3y^4z^5");
 	Polinom p2("2x ^ 3y ^ 4z ^ 5");
 	Polinom p3("8x^3y^4z^5");
 	t.Insert("5", p1);
 	t.Insert("6", p2);
 	t.Insert("7", p3);
-	HashTable<10>::iterator it1 = t.begin();
-	HashTable<10>::iterator it2 = t.end();
+	DirectHashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it2 = t.end();
 	it1 + t.GetActualSize();
 	ASSERT_ANY_THROW(it1 + 1);
 }
 
-TEST(HashTableiterator, equality_end_begin_for_empty_table) {
-	HashTable<10> t;
-	HashTable<10>::iterator it1 = t.begin();
-	HashTable<10>::iterator it2 = t.end();
+TEST(DirectHashTableiterator, equality_end_begin_for_empty_table) {
+	DirectHashTable<10> t;
+	DirectHashTable<10>::iterator it1 = t.begin();
+	DirectHashTable<10>::iterator it2 = t.end();
 	EXPECT_EQ(it1, it2);
 }

@@ -17,7 +17,7 @@
 
 
 
-using namespace std;   // лучше так не делать
+using namespace std;
 
 
 class Polinom {
