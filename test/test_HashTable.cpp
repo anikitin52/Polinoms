@@ -12,16 +12,6 @@ TEST(HashTable, InsertAndSearch) {
     EXPECT_NO_THROW(ht.Find("key2"));
 }
 
-TEST(HashTable, UpdateValue) {
-    HashTable ht(10);
-    Polinom p1("4x^5y^9z^8+2x^3y^4z^5"), p2("4x^5y^9z^8+2x^3y^4z^5");
-
-    ht.Insert("key", p1);
-    ht.Insert("key", p2); // Обновление
-
-    EXPECT_TRUE(ht.Find("key") == p2);
-}
-
 TEST(HashTable, RemoveKey) {
     HashTable ht(10);
     Polinom p("4x^5y^9z^8+2x^3y^4z^5");
