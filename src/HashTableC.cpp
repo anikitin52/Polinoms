@@ -85,7 +85,7 @@ void HashTable::Delete(string key)
 const Polinom* HashTable::Find(string key) const
 {
     size_t index = hash(key);
-    for (const auto& pair : data[index]) {
+    for (auto& pair : data[index]) {
         if (pair.first == key) {
             return &pair.second;
         }

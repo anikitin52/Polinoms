@@ -155,7 +155,7 @@ public:
 	friend ostream& operator<<(ostream& ostr, const Polinom& pol)
 	{
 		if (pol.GetStatus() == 0) {
-			throw 1;
+			ostr << "Null";
 		}
 		string str = "";
 		for (int i = 0; i < pol.monoms.size(); i++) {
