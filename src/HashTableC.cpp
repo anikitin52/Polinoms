@@ -10,7 +10,7 @@ size_t HashTable::stringToNumber(const std::string& key) const
     return hash;
 }
 
-size_t HashTable::hash(string key)
+size_t HashTable::hash(string key) const
 {
     size_t x = stringToNumber(key);
     return ((a * x + b) % p) % capacity;
@@ -82,12 +82,12 @@ void HashTable::Delete(string key)
     count--;
 }
 
-Polinom HashTable::Find(string key)
+const Polinom* HashTable::Find(string key) const
 {
     size_t index = hash(key);
     for (auto& pair : data[index]) {
         if (pair.first == key) {
-            return pair.second;
+            return &pair.second;
         }
     }
     throw std::out_of_range("Key '" + key + "' not found");

@@ -15,7 +15,7 @@ class HashTable {
 	vector<list<pair<string, Polinom>>> data;
 
 	size_t stringToNumber(const std::string& key) const;
-	size_t hash(string key);
+	size_t hash(string key) const;
 
 	void resize();
 
@@ -23,5 +23,5 @@ public:
 	HashTable(int size);
 	void Insert(string key, Polinom value);
 	void Delete(string key);
-	Polinom Find(string key);
+	const Polinom* Find(string key) const;
 };
