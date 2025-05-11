@@ -3,7 +3,7 @@
 #include "Polinom.h"
 
 template<int SIZE>
-class HashTable {
+class DirectHashTable {
 	tuple<string, Polinom, bool, bool> *Rows;
 	//tuple<2> - actual/default
 	//tuple<3> - not delete/delete
@@ -74,7 +74,7 @@ public:
 		return iterator(&Rows[size_table]);
 	}
 
-	HashTable() : Rows(nullptr), size_table(SIZE), actual_size_table(0), p(7){
+	DirectHashTable() : Rows(nullptr), size_table(SIZE), actual_size_table(0), p(7){
 		Rows = new tuple<string, Polinom, bool, bool>[size_table + 1];
 		std::get<0>(Rows[size_table]) = "END";
 		// как использовать функцию, которая не относится к самому классу, но нужна в методах
@@ -83,7 +83,7 @@ public:
 	// FLAGI
 	// constr RGB
 
-	HashTable(const HashTable& other) {
+	DirectHashTable(const DirectHashTable& other) {
 		size_table = other.size_table;
 		p = other.p;
 		actual_size_table = other.actual_size_table;
@@ -94,7 +94,7 @@ public:
 		}
 	}
 
-	HashTable& operator=(const HashTable& other) {
+	DirectHashTable& operator=(const DirectHashTable& other) {
 		if (this == &other) return *this;
 		delete[] Rows;
 		size_table = other.size_table;
@@ -108,7 +108,7 @@ public:
 		return *this;
 	}
 
-	~HashTable() {
+	~DirectHashTable() {
 		delete[] Rows;
 	}
 
