@@ -54,7 +54,7 @@ TEST(Output, CanCorrectCoutPolinomForTheCorrectString)
 TEST(Output, NotCanCoutPolinomForNotCorrectString)
 {
 	Polinom p("4x^5y^9z^8+2x^3y^4z^5+*");
-	ASSERT_ANY_THROW(cout << p);
+	ASSERT_NO_THROW(cout << p);
 }
 
 TEST(Calculate, CanCalculateForCorrectPolinom)

@@ -5,8 +5,8 @@
 //
 // Множество
 
-#ifndef __TRANSLATOR_H__
-#define __TRANSLATOR_H__
+#ifndef __POLINOM_H__
+#define __POLINOM_H__
 
 #include <iostream>
 #include <vector>
@@ -87,9 +87,11 @@ public:
 		while (i < n1 && j < n2) {
 			if (monoms[i].first > other.monoms[j].first) {
 				res_vector.push_back(monoms[i++]);
+				continue;
 			}
 			if (monoms[i].first < other.monoms[j].first) {
 				res_vector.push_back(other.monoms[j++]);
+				continue;
 			}
 			if (monoms[i].first == other.monoms[j].first) {
 				if ((other.monoms[j].second + monoms[i].second) != 0) {
@@ -159,10 +161,11 @@ public:
 		}
 		string str = "";
 		for (int i = 0; i < pol.monoms.size(); i++) {
-			if (i > 0) str += '+';
-			str += to_string(pol.monoms[i].second) + "x^" + to_string(pol.monoms[i].first / 100);
-			str += "y^" + to_string(pol.monoms[i].first % 100 / 10);
-			str += "z^" + to_string(pol.monoms[i].first % 10);
+			if (pol.monoms[i].second > 0) str += '+';
+			str += to_string(pol.monoms[i].second);
+			if (pol.monoms[i].first / 100) str += "x^" + to_string(pol.monoms[i].first / 100);
+			if (pol.monoms[i].first % 100 / 10) str += "y^" + to_string(pol.monoms[i].first % 100 / 10);
+			if (pol.monoms[i].first % 10) str += "z^" + to_string(pol.monoms[i].first % 10);
 		}
 		ostr << str;
 		return ostr;

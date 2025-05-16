@@ -1,5 +1,6 @@
-﻿#include <iostream>
-#include <string>
+﻿#pragma once
+#include <iostream>
+#include "translator.h"
 #include "Polinom.h"
 #include "HashTableC.h"
 #include "DirectHashTable.h"
@@ -9,6 +10,7 @@
 #include "RedBlackTree.h"
 #include <fstream>
 #include <string>
+
 
 class DataBase {
     Table database1;
@@ -24,21 +26,27 @@ public:
         switch (marker) {
         case 1: {
             database1.Insert(key, p);
+            break;
         }
         case 2: {
             database2.Insert(key, p);
+            break;
         }
         case 3: {
             database3.Insert(key, p);
+            break;
         }
         case 4: {
             database4.Insert(key, p);
+            break;
         }
         case 5: {
             database5.Insert(key, p);
+            break;
         }
         case 6: {
             database6.Insert(key, p);
+            break;
         }
         }
     }
@@ -58,7 +66,7 @@ public:
             return database4.Find(key);
         }
         case 5: {
-            //return database5.Find(key);
+            return database5.Find(key);
         }
         case 6: {
             return database6.Find(key);
@@ -156,7 +164,9 @@ int main()
 
 
     while (true) {
-        cout << "Введите тип совершаемой операции: 1 - вставка, 2 - удаление, 3 - поиск" << endl;
+        cout << "Введите тип совершаемой операции: 1 - вставка, 2 - удаление, 3 - поиск, " << endl;
+        cout << "4 - введение арифметического выражения, где операндами выступают ключи полиномов" << endl;
+        cout << "Справка: для осуведение арифметического выражения, где операндами выступают ключи полиномов" << endl;
         cout << "Введите 0 для выхода из приложения" << endl;
         std::getline(std::cin, input);
         if (input == "0") {
@@ -171,11 +181,13 @@ int main()
             std::getline(std::cin, input);
             Polinom value = Polinom(input);
             database.Insert(key, value);
+            continue;
         }
         if (input == "2") {
             std::cout << "Введите ключ удаляемого элемента:" << std::endl;
             std::getline(std::cin, input);
             database.Delete(input);
+            continue;
         }
         if (input == "3") {
             std::cout << "Введите ключ искомого элемента:" << std::endl;
@@ -188,6 +200,37 @@ int main()
             else {
                 std::cout << "Элемент с таким ключом найден. " << std::endl;
                 std::cout << "Возвращаемое значение: " << *p << endl;
+            }
+            continue;
+        }
+
+        if (input == "4") {
+            std::cout << "Справка: " << std::endl;
+            std::cout << "В качестве операндов могут выступать как числа, так и ключи полиномов" << std::endl;
+            std::cout << "Для написания арифметических выражений использовать в качестве ключей полиномов строки, имеющие следующий формат:" << std::endl;
+            std::cout << "Первым символом может быть буква или символ подчёркивания, последующими символами могут быть цифры, буквы или символ подчёркивания\n" << std::endl;
+            std::cout << "Введите арифметическое выражение: " << std::endl;
+            std::getline(std::cin, input);
+            Translator t(input);
+            if (!t.GetStatus()) {
+                cout << "Введено некорректное арифметическое выражение.\n";
+                break;
+            }
+            vector<string> name_vars = t.GetOperands();
+            map<string, Polinom> values;
+            int flag = 1;
+            for (const auto name : name_vars) {
+                Polinom* p = database.Find(name);
+                if (!p) {
+                    cout << "Полинома с указанным именем нет в базе данных.\n";
+                    flag = 0;
+                    break;
+                }
+                values[name] = *p;
+            }
+            if (flag) {
+                cout << "Результат: ";
+                cout << t.Calculate(values) << endl;
             }
         }
     }

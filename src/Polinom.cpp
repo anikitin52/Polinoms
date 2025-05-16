@@ -47,7 +47,7 @@ int Polinom::Parse(string str) {
 				actual_pair.second = stod(actual_string);
 				actual_string = ""; condition = Stat::Svar1_; break;
 			}
-			if (str[i] == '.') { actual_string += str[i]; condition = Stat::Snumb2; break; }
+			if (str[i] == '.') { actual_string += ","; condition = Stat::Snumb2; break; }
 			else condition = Stat::Error; break;
 		case Stat::Snumb2:  // closed
 			if (std::isdigit(str[i])) { actual_string += str[i]; condition = Stat::Snumb3; break; }

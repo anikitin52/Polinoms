@@ -23,5 +23,5 @@ public:
 	HashTable(int size);
 	void Insert(string key, Polinom value);
 	void Delete(string key);
-	const Polinom* Find(string key) const;
+	Polinom* Find(string key);
 };
